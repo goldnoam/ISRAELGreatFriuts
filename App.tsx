@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState, useEffect } from 'react';
 import Header from './components/Header';
 import FruitCard from './components/FruitCard';
@@ -11,6 +10,7 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('name-asc');
   const [showOnlyNew, setShowOnlyNew] = useState(false);
+  // Default to dark theme as requested
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
@@ -201,7 +201,7 @@ const App: React.FC = () => {
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-gray-500 py-16 px-6 text-center text-sm">
+      <footer className="bg-gray-900 text-gray-500 py-16 px-6 text-center text-sm border-t border-gray-800">
         <div className="container mx-auto">
           <div className="mb-10 flex justify-center gap-8 grayscale opacity-30">
              <span className="text-4xl">🌿</span>
@@ -209,9 +209,10 @@ const App: React.FC = () => {
              <span className="text-4xl">🌳</span>
           </div>
           <p className="mb-3 font-black text-gray-400 uppercase tracking-[0.2em] text-xs">טו בשבט בארץ זבת חלב ודבש</p>
-          <p className="text-gray-600 font-light mb-4">© Noam Gold AI 2026 - המדריך הירוק לתוצרת הארץ</p>
-          <div className="flex justify-center gap-4">
-            <a href="mailto:goldnoamai@gmail.com" className="text-green-500 hover:text-green-400 font-bold transition-colors">שלחו משוב: goldnoamai@gmail.com</a>
+          <p className="text-gray-400 font-bold mb-4">(C) Noam Gold AI 2026</p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-gray-500">Send Feedback</p>
+            <a href="mailto:goldnoamai@gmail.com" className="text-green-500 hover:text-green-400 font-bold transition-colors text-base">goldnoamai@gmail.com</a>
           </div>
         </div>
       </footer>
