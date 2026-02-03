@@ -79,11 +79,12 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-[#fdfdfb] dark:bg-gray-950 transition-colors duration-300" dir="rtl">
       <Header />
       
-      {/* Theme Switcher */}
+      {/* Theme Switcher Button */}
       <div className="fixed top-4 left-4 z-[60]">
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)}
           className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 transition-all text-xl"
+          aria-label={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
           title={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
         >
           {isDarkMode ? '☀️' : '🌙'}
@@ -184,11 +185,17 @@ const App: React.FC = () => {
           )}
         </section>
 
-        {/* AdSense Placeholder */}
+        {/* AdSense Placeholder Area */}
         <div className="container mx-auto px-6 py-8 flex justify-center">
-            <div className="w-full max-w-4xl h-32 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center border border-dashed border-gray-300 dark:border-gray-700 text-gray-400 italic">
-                שטח פרסום - Google AdSense
-            </div>
+            <ins className="adsbygoogle"
+                 style={{ display: 'block' }}
+                 data-ad-client="ca-pub-2103405502519017"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
 
         <section className="bg-[#1a2f1a] text-white py-24 px-6 relative overflow-hidden">
