@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>פירות ארץ ישראל | המדריך המלא לט"ו בשבט</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="קטלוג אינטראקטיבי של פירות וירקות הארץ: שבעת המינים, זנים מפורסמים, עונתיות וברכות הנהנין. חוגגים את ארץ זבת חלב ודבש." />
+    <meta name="keywords" content="טוב בשבט, פירות הארץ, שבעת המינים, חקלאות ישראל, ברכות הנהנין, פירות וירקות" />
+    <meta name="author" content="Noam Gold AI" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://your-domain.com/" />
+    <meta property="og:title" content="פירות ארץ ישראל | המדריך המלא" />
+    <meta property="og:description" content="גלו את עושר האדמה המבורכת של ישראל בקטלוג מרהיב לכבוד חג האילנות." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1541344999736-83eca872999e?q=80&w=800" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="פירות ארץ ישראל | המדריך המלא" />
+    <meta property="twitter:description" content="גלו את עושר האדמה המבורכת של ישראל בקטלוג מרהיב לכבוד חג האילנות." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1047/1047503.png" />
+
+    <!-- AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0000000000000000" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              green: {
+                950: '#052e16',
+              },
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;400;700;800&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Assistant', sans-serif;
+        overflow-x: hidden;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes seedScatter {
+        0% { transform: translate(0, 0) scale(0); opacity: 0; }
+        30% { opacity: 1; transform: translate(var(--dx), var(--dy)) scale(1.2); }
+        100% { transform: translate(calc(var(--dx) * 1.5), calc(var(--dy) * 1.5)) scale(0.5); opacity: 0; }
+      }
+      .animate-seedScatter { animation: seedScatter 1.5s cubic-bezier(0.25, 1, 0.5, 1) infinite; position: absolute; }
+      .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
+      .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+      
+      ::-webkit-scrollbar { width: 10px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #15803d; border-radius: 5px; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+</head>
+  <body class="dark:bg-gray-950">
+    <div id="root"></div>
+  </body>
+</html>
