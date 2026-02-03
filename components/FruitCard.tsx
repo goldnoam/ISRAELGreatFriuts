@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Fruit, BlessingType } from '../types';
 
 interface FruitCardProps {
@@ -18,7 +18,9 @@ const SeedParticles: React.FC<{ active: boolean }> = ({ active }) => {
           style={{
             width: Math.random() * 5 + 3 + 'px',
             height: Math.random() * 7 + 4 + 'px',
-          }}
+            '--dx': (Math.random() * 100 - 50) + 'px',
+            '--dy': (Math.random() * 100 - 50) + 'px',
+          } as React.CSSProperties}
         />
       ))}
     </div>
@@ -28,6 +30,54 @@ const SeedParticles: React.FC<{ active: boolean }> = ({ active }) => {
 const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPitHovered, setIsPitHovered] = useState(false);
+  const [zoomScale, setZoomScale] = useState(1);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartPos = useRef({ x: 0, y: 0 });
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  const resetZoom = () => {
+    setZoomScale(1);
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleZoomIn = () => setZoomScale(prev => Math.min(prev + 0.5, 4));
+  const handleZoomOut = () => {
+    const newScale = Math.max(zoomScale - 0.5, 1);
+    setZoomScale(newScale);
+    if (newScale === 1) setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (isModalOpen) {
+      if (e.deltaY < 0) handleZoomIn();
+      else handleZoomOut();
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoomScale > 1) {
+      setIsDragging(true);
+      dragStartPos.current = { x: e.clientX - dragOffset.x, y: e.clientY - dragOffset.y };
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging && zoomScale > 1) {
+      setDragOffset({
+        x: e.clientX - dragStartPos.current.x,
+        y: e.clientY - dragStartPos.current.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => setIsDragging(false);
+
+  // Close modal and reset zoom
+  const closeModal = () => {
+    setIsModalOpen(false);
+    resetZoom();
+  };
 
   const renderDescription = (desc: string) => {
     const parts = desc.split(/(\*\*.*?\*\*)/g);
@@ -132,21 +182,70 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
       {isModalOpen && (
         <div 
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/90 backdrop-blur-xl animate-fadeIn"
-          onClick={() => setIsModalOpen(false)}
+          onClick={closeModal}
         >
           <div 
             className="relative max-w-5xl w-full bg-white dark:bg-gray-800 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row animate-fadeInUp max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <button 
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-6 right-6 z-10 bg-black/20 hover:bg-black/40 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all hover:rotate-90 text-3xl backdrop-blur-sm"
+              onClick={closeModal}
+              className="absolute top-6 right-6 z-30 bg-black/20 hover:bg-black/40 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all hover:rotate-90 text-3xl backdrop-blur-sm"
+              aria-label="סגור"
             >
               &times;
             </button>
 
-            <div className="md:w-1/2 overflow-hidden bg-gray-100 dark:bg-gray-900">
-              <img src={fruit.image} alt={fruit.name} className="w-full h-full object-cover" />
+            {/* Zoomable Image Container */}
+            <div 
+              className="md:w-1/2 overflow-hidden bg-gray-100 dark:bg-gray-900 relative cursor-zoom-in"
+              onWheel={handleWheel}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
+              <img 
+                ref={imageRef}
+                src={fruit.image} 
+                alt={fruit.name} 
+                className={`w-full h-full object-cover transition-transform duration-300 ease-out select-none ${zoomScale > 1 ? 'cursor-grabbing' : 'cursor-zoom-in'}`}
+                style={{ 
+                  transform: `scale(${zoomScale}) translate(${dragOffset.x / zoomScale}px, ${dragOffset.y / zoomScale}px)` 
+                }}
+                draggable={false}
+              />
+              
+              {/* Zoom Controls Overlay */}
+              <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-20">
+                <button 
+                  onClick={handleZoomIn}
+                  className="w-10 h-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-full flex items-center justify-center text-xl font-bold shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
+                  title="זום פנימה"
+                >
+                  +
+                </button>
+                <button 
+                  onClick={handleZoomOut}
+                  className="w-10 h-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-full flex items-center justify-center text-xl font-bold shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
+                  title="זום החוצה"
+                >
+                  -
+                </button>
+                <button 
+                  onClick={resetZoom}
+                  className="w-10 h-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
+                  title="אפס זום"
+                >
+                  🔄
+                </button>
+              </div>
+              
+              {zoomScale > 1 && (
+                <div className="absolute top-6 left-6 bg-black/40 backdrop-blur text-white text-[10px] px-3 py-1 rounded-full z-20 pointer-events-none">
+                  זום: {zoomScale.toFixed(1)}x (גלגלו או גררו)
+                </div>
+              )}
             </div>
 
             <div className="md:w-1/2 p-8 md:p-12 text-right flex flex-col overflow-y-auto">
