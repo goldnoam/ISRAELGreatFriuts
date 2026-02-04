@@ -21,6 +21,16 @@ const App: React.FC = () => {
     }
   }, [isDarkMode]);
 
+  // Handle Google AdSense initialization safely
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error('AdSense error:', e);
+    }
+  }, []);
+
   const newItemsCount = useMemo(() => FRUITS.filter(f => f.isNew).length, []);
 
   const filteredAndSortedItems = useMemo(() => {
@@ -186,16 +196,13 @@ const App: React.FC = () => {
         </section>
 
         {/* AdSense Placement Area */}
-        <div className="container mx-auto px-6 py-8 flex justify-center">
+        <div className="container mx-auto px-6 py-8 flex justify-center min-h-[100px]">
             <ins className="adsbygoogle"
-                 style={{ display: 'block' }}
+                 style={{ display: 'block', minWidth: '300px', minHeight: '100px' }}
                  data-ad-client="ca-pub-2103405502519017"
                  data-ad-slot="1234567890"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
         </div>
 
         <section className="bg-[#1a2f1a] text-white py-24 px-6 relative overflow-hidden">
