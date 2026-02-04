@@ -10,7 +10,7 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('name-asc');
   
-  // Default to dark theme as requested
+  // Default to dark theme
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
@@ -21,14 +21,12 @@ const App: React.FC = () => {
     }
   }, [isDarkMode]);
 
-  // Handle Google AdSense initialization safely
+  // AdSense Init
   useEffect(() => {
     try {
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-      console.warn('AdSense init delayed');
-    }
+    } catch (e) {}
   }, []);
 
   const resetFilters = () => {
@@ -45,33 +43,20 @@ const App: React.FC = () => {
         const name = item.name.toLowerCase();
         const scientific = item.scientificName.toLowerCase();
         const description = item.description.toLowerCase();
-        const varieties = item.famousVarieties.join(' ').toLowerCase();
-        return name.includes(term) || 
-               scientific.includes(term) ||
-               varieties.includes(term) ||
-               description.includes(term);
+        return name.includes(term) || scientific.includes(term) || description.includes(term);
       });
       
-      result.sort((a, b) => {
-        const aName = a.name.toLowerCase();
-        const bName = b.name.toLowerCase();
-        if (aName === term) return -1;
-        if (bName === term) return 1;
-        return aName.localeCompare(bName, 'he');
-      });
+      result.sort((a, b) => a.name.localeCompare(b.name, 'he'));
     }
 
     if (!searchTerm.trim()) {
       result.sort((a, b) => {
-        if (sortOption === 'name-asc') {
-          return a.name.localeCompare(b.name, 'he');
-        } else if (sortOption === 'name-desc') {
-          return b.name.localeCompare(a.name, 'he');
-        } else if (sortOption === 'priority') {
+        if (sortOption === 'name-asc') return a.name.localeCompare(b.name, 'he');
+        if (sortOption === 'name-desc') return b.name.localeCompare(a.name, 'he');
+        if (sortOption === 'priority') {
           const aOrder = a.priorityOrder || 999;
           const bOrder = b.priorityOrder || 999;
-          if (aOrder !== bOrder) return aOrder - bOrder;
-          return a.name.localeCompare(b.name, 'he');
+          return aOrder - bOrder;
         }
         return 0;
       });
@@ -82,103 +67,71 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-300" dir="rtl">
-      <Header />
-      
       {/* Theme Switcher Button */}
-      <div className="fixed top-4 left-4 z-[60]">
+      <div className="fixed top-4 left-4 z-[100]">
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)}
           className="p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full shadow-2xl border border-gray-200 dark:border-gray-700 hover:scale-110 active:scale-95 transition-all text-xl"
           aria-label={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
-          title={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
         >
           {isDarkMode ? '☀️' : '🌙'}
         </button>
       </div>
 
+      <Header />
       <PrioritySection />
 
       <main className="flex-grow">
         <section className="py-12 px-4 md:px-6 container mx-auto">
           <div className="text-center mb-12">
-            <div className="flex flex-col items-center justify-center gap-3 mb-4">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white">קטלוג פירות וירקות הארץ</h2>
-              <div className="flex gap-2">
-                <button 
-                  onClick={resetFilters}
-                  className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-black px-4 py-1.5 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-                >
-                  אפס חיפוש 🔄
-                </button>
-              </div>
-            </div>
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6">קטלוג פירות וירקות הארץ</h2>
             
-            <div className="flex flex-col gap-5 max-w-5xl mx-auto bg-white dark:bg-gray-900 p-5 md:p-8 rounded-[2.5rem] border border-green-50 dark:border-gray-800 shadow-2xl shadow-green-900/5">
-              <div className="flex flex-col md:flex-row items-stretch md:items-center gap-5">
-                <div className="relative flex-grow">
-                  <input
-                    type="text"
-                    placeholder="חפשו פרי או זן (תמר, בננה, תפוח)..."
-                    className="w-full pr-12 pl-12 py-4 rounded-3xl border-2 border-green-50 dark:border-gray-800 focus:border-green-500 focus:bg-white dark:focus:bg-gray-800 outline-none transition-all text-xl bg-gray-50/50 dark:bg-gray-800/50 dark:text-white"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <span className="absolute inset-y-0 right-5 flex items-center text-green-600 dark:text-green-400 pointer-events-none text-2xl">
-                    🔍
-                  </span>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-5">
-                  <select 
-                    className="appearance-none px-6 py-4 rounded-3xl border-2 border-green-50 dark:border-gray-800 focus:border-green-500 outline-none bg-gray-50/50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-bold cursor-pointer"
-                    value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value as SortOption)}
-                  >
-                    <option value="name-asc">א-ב עולה</option>
-                    <option value="name-desc">א-ב יורד</option>
-                    <option value="priority">סדר מסורתי</option>
-                  </select>
-                </div>
+            <div className="flex flex-col gap-5 max-w-4xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-xl">
+              <div className="flex flex-col md:flex-row gap-4">
+                <input
+                  type="text"
+                  placeholder="חפשו פרי..."
+                  className="flex-grow px-6 py-3 rounded-2xl border-2 border-gray-100 dark:border-gray-800 dark:bg-gray-800 dark:text-white focus:border-green-500 outline-none transition-all"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <select 
+                  className="px-6 py-3 rounded-2xl border-2 border-gray-100 dark:border-gray-800 dark:bg-gray-800 dark:text-white font-bold"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value as SortOption)}
+                >
+                  <option value="name-asc">א-ב</option>
+                  <option value="priority">סדר שבעת המינים</option>
+                </select>
+                <button onClick={resetFilters} className="px-6 py-3 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700">איפוס</button>
               </div>
             </div>
           </div>
 
-          {filteredAndSortedItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {filteredAndSortedItems.map((item) => (
-                <FruitCard key={item.id} fruit={item} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-24 bg-white dark:bg-gray-900 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-gray-800 max-w-3xl mx-auto">
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-4">לא מצאנו פרי בשם "{searchTerm}"</h3>
-              <button 
-                onClick={() => setSearchTerm('')}
-                className="px-8 py-3 bg-green-700 text-white rounded-full font-bold hover:bg-green-800 transition-all"
-              >
-                חזרה לכל הקטלוג
-              </button>
-            </div>
-          )}
-        </section>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredAndSortedItems.map((item) => (
+              <FruitCard key={item.id} fruit={item} />
+            ))}
+          </div>
 
-        {/* AdSense Placement */}
-        <div className="container mx-auto px-6 py-8 flex justify-center min-h-[100px]">
+          {/* AdSense Placement */}
+          <div className="mt-16 flex justify-center min-h-[100px]">
             <ins className="adsbygoogle"
-                 style={{ display: 'block', minWidth: '300px', minHeight: '100px' }}
+                 style={{ display: 'block', minWidth: '300px' }}
                  data-ad-client="ca-pub-2103405502519017"
                  data-ad-slot="1234567890"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
-        </div>
+          </div>
+        </section>
       </main>
 
-      <footer className="bg-gray-950 text-gray-500 py-16 px-6 text-center text-sm border-t border-gray-900">
+      <footer className="bg-gray-900 text-gray-400 py-12 px-6 text-center text-sm border-t border-gray-800">
         <div className="container mx-auto">
-          <p className="text-gray-400 font-bold mb-4">(C) Noam Gold AI 2026</p>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-gray-500 text-xs uppercase tracking-widest">Send Feedback</p>
-            <a href="mailto:goldnoamai@gmail.com" className="text-green-500 hover:text-green-400 font-bold transition-colors text-lg">goldnoamai@gmail.com</a>
+          <p className="font-bold text-gray-300 mb-2">(C) Noam Gold AI 2026</p>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-xs uppercase tracking-widest text-gray-500">Send Feedback</span>
+            <a href="mailto:goldnoamai@gmail.com" className="text-green-500 hover:underline font-bold text-lg">goldnoamai@gmail.com</a>
           </div>
         </div>
       </footer>
