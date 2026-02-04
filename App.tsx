@@ -27,7 +27,7 @@ const App: React.FC = () => {
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
-      console.error('AdSense error:', e);
+      console.warn('AdSense blocked or not available:', e);
     }
   }, []);
 
@@ -89,11 +89,11 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-[#fdfdfb] dark:bg-gray-950 transition-colors duration-300" dir="rtl">
       <Header />
       
-      {/* Theme Switcher */}
+      {/* Theme Switcher Button */}
       <div className="fixed top-4 left-4 z-[60]">
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)}
-          className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 transition-all text-xl"
+          className="p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 active:scale-95 transition-all text-xl"
           aria-label={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
           title={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
         >
