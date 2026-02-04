@@ -79,7 +79,7 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-[#fdfdfb] dark:bg-gray-950 transition-colors duration-300" dir="rtl">
       <Header />
       
-      {/* Theme Switcher Button */}
+      {/* Theme Switcher */}
       <div className="fixed top-4 left-4 z-[60]">
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)}
@@ -185,7 +185,7 @@ const App: React.FC = () => {
           )}
         </section>
 
-        {/* AdSense Placeholder Area */}
+        {/* AdSense Placement Area */}
         <div className="container mx-auto px-6 py-8 flex justify-center">
             <ins className="adsbygoogle"
                  style={{ display: 'block' }}
