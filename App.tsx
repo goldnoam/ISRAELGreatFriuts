@@ -11,7 +11,7 @@ const App: React.FC = () => {
   const [sortOption, setSortOption] = useState<SortOption>('name-asc');
   const [showOnlyNew, setShowOnlyNew] = useState(false);
   
-  // Default to dark theme as requested
+  // Default to dark theme as requested: change theme to dark theme by default
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
@@ -31,6 +31,12 @@ const App: React.FC = () => {
       console.warn('AdSense blocked or not available:', e);
     }
   }, []);
+
+  const resetFilters = () => {
+    setSearchTerm('');
+    setSortOption('name-asc');
+    setShowOnlyNew(false);
+  };
 
   const newItemsCount = useMemo(() => FRUITS.filter(f => f.isNew).length, []);
 
@@ -94,7 +100,7 @@ const App: React.FC = () => {
       <div className="fixed top-4 left-4 z-[60]">
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)}
-          className="p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 active:scale-95 transition-all text-xl"
+          className="p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-full shadow-2xl border border-gray-200 dark:border-gray-700 hover:scale-110 active:scale-95 transition-all text-xl"
           aria-label={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
           title={isDarkMode ? 'מעבר למצב יום' : 'מעבר למצב לילה'}
         >
@@ -107,13 +113,22 @@ const App: React.FC = () => {
       <main className="flex-grow">
         <section className="py-12 px-4 md:px-6 container mx-auto">
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="flex flex-col items-center justify-center gap-3 mb-4">
               <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white">קטלוג פירות וירקות הארץ</h2>
-              {newItemsCount > 0 && (
-                <span className="bg-yellow-400 text-yellow-900 text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-yellow-200 animate-pulse">
-                  {newItemsCount} חדשים ✨
-                </span>
-              )}
+              <div className="flex gap-2">
+                {newItemsCount > 0 && (
+                  <span className="bg-yellow-400 text-yellow-900 text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-yellow-200 animate-pulse">
+                    {newItemsCount} חדשים ✨
+                  </span>
+                )}
+                <button 
+                  onClick={resetFilters}
+                  className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-black px-4 py-1.5 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+                  title="אפס הכל"
+                >
+                  אפס חיפוש 🔄
+                </button>
+              </div>
             </div>
             <p className="text-base md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed font-light">
               חפשו כל פרי או ירק לקבלת מידע בוטני, זנים פופולריים וטיפים לאכילה נכונה.
@@ -206,7 +221,7 @@ const App: React.FC = () => {
                  data-full-width-responsive="true"></ins>
         </div>
 
-        <section className="bg-[#1a2f1a] text-white py-24 px-6 relative overflow-hidden">
+        <section className="bg-green-900 dark:bg-[#0d160d] text-white py-24 px-6 relative overflow-hidden transition-colors">
           <div className="container mx-auto max-w-4xl relative z-10 text-center">
             <h2 className="text-5xl font-black mb-8 leading-tight">"כִּי הָאָדָם עֵץ הַשָּׂדֶה"</h2>
             <p className="text-xl md:text-3xl font-light leading-relaxed mb-14 text-green-100/80">
@@ -216,9 +231,9 @@ const App: React.FC = () => {
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-gray-500 py-16 px-6 text-center text-sm border-t border-gray-800">
+      <footer className="bg-gray-950 text-gray-500 py-16 px-6 text-center text-sm border-t border-gray-900">
         <div className="container mx-auto">
-          <div className="mb-10 flex justify-center gap-8 grayscale opacity-30">
+          <div className="mb-10 flex justify-center gap-8 grayscale opacity-20">
              <span className="text-4xl">🌿</span>
              <span className="text-4xl">🌾</span>
              <span className="text-4xl">🌳</span>
@@ -226,7 +241,7 @@ const App: React.FC = () => {
           <p className="mb-3 font-black text-gray-400 uppercase tracking-[0.2em] text-xs">טו בשבט בארץ זבת חלב ודבש</p>
           <p className="text-gray-400 font-bold mb-4">(C) Noam Gold AI 2026</p>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-gray-500">Send Feedback</p>
+            <p className="text-gray-500 text-xs uppercase tracking-widest">Send Feedback</p>
             <a href="mailto:goldnoamai@gmail.com" className="text-green-500 hover:text-green-400 font-bold transition-colors text-base">goldnoamai@gmail.com</a>
           </div>
         </div>
