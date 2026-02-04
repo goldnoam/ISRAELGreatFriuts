@@ -10,6 +10,7 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('name-asc');
   const [showOnlyNew, setShowOnlyNew] = useState(false);
+  
   // Default to dark theme as requested
   const [isDarkMode, setIsDarkMode] = useState(true);
 
