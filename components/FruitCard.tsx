@@ -1,5 +1,4 @@
-
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Fruit, BlessingType } from '../types';
 
 interface FruitCardProps {
@@ -73,7 +72,6 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
 
   const handleMouseUp = () => setIsDragging(false);
 
-  // Close modal and reset zoom
   const closeModal = () => {
     setIsModalOpen(false);
     resetZoom();
@@ -158,8 +156,10 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
           <div className="space-y-4 pt-6 border-t border-gray-100 dark:border-gray-700">
             <div className="flex items-center text-xs font-bold">
               <div className={`w-2 h-2 rounded-full ml-3 ${fruit.canEatRaw ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className="text-gray-400 ml-1 uppercase">מאכל:</span>
-              <span className="text-gray-900 dark:text-gray-200">{fruit.canEatRaw ? 'נאכל כמות שהוא' : 'דורש הכנה'}</span>
+              <span className="text-gray-400 ml-1 uppercase">אכילה:</span>
+              <span className={`px-2 py-0.5 rounded ${fruit.canEatRaw ? 'text-green-600 bg-green-50 dark:bg-green-900/20' : 'text-red-600 bg-red-50 dark:bg-red-900/20'}`}>
+                {fruit.canEatRaw ? 'ניתן לאכול טרי' : 'דורש הכנה/בישול'}
+              </span>
             </div>
             
             <div 
@@ -178,7 +178,6 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
         </div>
       </div>
 
-      {/* Detail Modal */}
       {isModalOpen && (
         <div 
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/90 backdrop-blur-xl animate-fadeIn"
@@ -196,9 +195,8 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
               &times;
             </button>
 
-            {/* Zoomable Image Container */}
             <div 
-              className="md:w-1/2 overflow-hidden bg-gray-100 dark:bg-gray-900 relative cursor-zoom-in"
+              className="md:w-1/2 overflow-hidden bg-gray-100 dark:bg-gray-900 relative cursor-zoom-in h-64 md:h-auto"
               onWheel={handleWheel}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
@@ -216,7 +214,6 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
                 draggable={false}
               />
               
-              {/* Zoom Controls Overlay */}
               <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-20">
                 <button 
                   onClick={handleZoomIn}
@@ -240,12 +237,6 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
                   🔄
                 </button>
               </div>
-              
-              {zoomScale > 1 && (
-                <div className="absolute top-6 left-6 bg-black/40 backdrop-blur text-white text-[10px] px-3 py-1 rounded-full z-20 pointer-events-none">
-                  זום: {zoomScale.toFixed(1)}x (גלגלו או גררו)
-                </div>
-              )}
             </div>
 
             <div className="md:w-1/2 p-8 md:p-12 text-right flex flex-col overflow-y-auto">
@@ -259,14 +250,16 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
                  {renderDescription(fruit.description)}
                </p>
 
-               <div className="grid grid-cols-2 gap-6 mb-8">
+               <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="flex flex-col gap-1 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-100 dark:border-gray-600">
                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">ברכת הנהנין</span>
                     <span className="text-lg font-bold text-orange-600 dark:text-orange-400">{fruit.blessing}</span>
                   </div>
                   <div className="flex flex-col gap-1 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-100 dark:border-gray-600">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">עונתיות בארץ</span>
-                    <span className="text-lg font-bold text-blue-700 dark:text-blue-400">{fruit.seasonality}</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">אופן האכילה</span>
+                    <span className={`text-lg font-bold ${fruit.canEatRaw ? 'text-green-600' : 'text-red-500'}`}>
+                      {fruit.canEatRaw ? 'ניתן לאכול טרי' : 'דורש בישול/עיבוד'}
+                    </span>
                   </div>
                </div>
                
@@ -284,8 +277,15 @@ const FruitCard: React.FC<FruitCardProps> = ({ fruit }) => {
                </div>
 
                <div className="pt-6 border-t border-gray-100 dark:border-gray-700">
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter block mb-2">פרטי גלעין וזרעים</span>
-                  <span className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{fruit.pitDescription}</span>
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter block mb-2">מידע על גלעינים וקליפה</span>
+                  <div className="space-y-2">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      <strong className="text-gray-800 dark:text-gray-200">גלעין:</strong> {fruit.pitDescription}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      <strong className="text-gray-800 dark:text-gray-200">קליפה:</strong> {fruit.hasPeel ? (fruit.peelEdible ? 'הקליפה אכילה ומומלצת' : 'יש לקלף לפני האכילה') : 'ללא קליפה משמעותית'}
+                    </p>
+                  </div>
                </div>
             </div>
           </div>
