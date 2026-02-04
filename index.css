@@ -1,47 +1,29 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply font-sans overflow-x-hidden transition-colors duration-300;
+  html {
+    @apply transition-colors duration-300;
   }
+  body {
+    @apply font-sans overflow-x-hidden text-gray-900 dark:text-gray-100;
+  }
+  
+  /* Font Size Mapping */
+  .text-sm { font-size: 0.875rem; }
+  .text-base { font-size: 1rem; }
+  .text-lg { font-size: 1.125rem; }
 }
 
 @layer utilities {
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  .animate-fadeInUp {
-    animation: fadeInUp 0.6s ease-out forwards;
-  }
-
   .animate-fadeIn {
-    animation: fadeIn 0.3s ease-out forwards;
+    animation: fadeIn 0.3s ease-out;
   }
-
-  ::-webkit-scrollbar {
-    width: 8px;
+  .animate-fadeInUp {
+    animation: fadeInUp 0.5s ease-out;
   }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-green-700 rounded-full;
-  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 }

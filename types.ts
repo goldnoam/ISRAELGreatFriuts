@@ -1,38 +1,51 @@
 
 export enum FruitGroup {
-  SevenSpecies = 'שבעת המינים',
-  Citrus = 'הדרים',
-  StoneFruit = 'פירות גלעין',
-  Tropical = 'טרופי',
-  Forest = 'פירות יער/גרגירים',
-  Grains = 'דגנים',
-  Melons = 'מִקְשָׁה (אבטיחים ודלועים)',
-  Vegetables = 'ירקות',
-  ExoticVegetables = 'ירקות חדשים/מיוחדים'
+  SevenSpecies = 'SevenSpecies',
+  Citrus = 'Citrus',
+  StoneFruit = 'StoneFruit',
+  Tropical = 'Tropical',
+  Forest = 'Forest',
+  Grains = 'Grains',
+  Melons = 'Melons',
+  Vegetables = 'Vegetables',
+  ExoticVegetables = 'ExoticVegetables'
 }
 
 export enum BlessingType {
-  Etz = 'בורא פרי העץ',
-  Adama = 'בורא פרי האדמה',
-  Mezonot = 'בורא מיני מזונות'
+  Etz = 'Etz',
+  Adama = 'Adama',
+  Mezonot = 'Mezonot'
+}
+
+export interface LocalizedString {
+  he: string;
+  en: string;
+  zh: string;
+  hi: string;
+  de: string;
+  es: string;
+  fr: string;
 }
 
 export interface Fruit {
   id: string;
-  name: string;
+  name: LocalizedString;
   scientificName: string;
   group: FruitGroup;
   blessing: BlessingType;
   canEatRaw: boolean;
   hasPit: boolean;
-  pitDescription: string;
+  pitDescription: LocalizedString;
   hasPeel: boolean;
   peelEdible: boolean;
-  priorityOrder?: number; // For Shivat HaMinim
-  description: string;
+  priorityOrder?: number;
+  description: LocalizedString;
   image: string;
   isNew?: boolean;
   varietiesCount: number;
-  famousVarieties: string[];
-  seasonality: string;
+  famousVarieties: LocalizedString[];
+  seasonality: LocalizedString;
 }
+
+export type Language = 'he' | 'en' | 'zh' | 'hi' | 'de' | 'es' | 'fr';
+export type FontSize = 'sm' | 'base' | 'lg';
