@@ -9,7 +9,6 @@ type SortOption = 'name-asc' | 'name-desc' | 'priority';
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('name-asc');
-  const [showOnlyNew, setShowOnlyNew] = useState(false);
   
   // Default to dark theme as requested
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -28,17 +27,14 @@ const App: React.FC = () => {
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
-      console.warn('AdSense initialization skipped or failed:', e);
+      // Ignored for environments without AdSense
     }
   }, []);
 
   const resetFilters = () => {
     setSearchTerm('');
     setSortOption('name-asc');
-    setShowOnlyNew(false);
   };
-
-  const newItemsCount = useMemo(() => FRUITS.filter(f => f.isNew).length, []);
 
   const filteredAndSortedItems = useMemo(() => {
     let result = [...FRUITS];
@@ -65,10 +61,6 @@ const App: React.FC = () => {
       });
     }
 
-    if (showOnlyNew) {
-      result = result.filter(item => item.isNew);
-    }
-
     if (!searchTerm.trim()) {
       result.sort((a, b) => {
         if (sortOption === 'name-asc') {
@@ -86,7 +78,7 @@ const App: React.FC = () => {
     }
 
     return result;
-  }, [searchTerm, sortOption, showOnlyNew]);
+  }, [searchTerm, sortOption]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fdfdfb] dark:bg-gray-950 transition-colors duration-300" dir="rtl">
@@ -112,11 +104,6 @@ const App: React.FC = () => {
             <div className="flex flex-col items-center justify-center gap-3 mb-4">
               <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white">קטלוג פירות וירקות הארץ</h2>
               <div className="flex gap-2">
-                {newItemsCount > 0 && (
-                  <span className="bg-yellow-400 text-yellow-900 text-xs font-black px-4 py-1.5 rounded-full shadow-lg animate-pulse">
-                    {newItemsCount} חדשים ✨
-                  </span>
-                )}
                 <button 
                   onClick={resetFilters}
                   className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-black px-4 py-1.5 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
@@ -175,7 +162,6 @@ const App: React.FC = () => {
           )}
         </section>
 
-        {/* AdSense Placement */}
         <div className="container mx-auto px-6 py-8 flex justify-center min-h-[100px]">
             <ins className="adsbygoogle"
                  style={{ display: 'block', minWidth: '300px', minHeight: '100px' }}
