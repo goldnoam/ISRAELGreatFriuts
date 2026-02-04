@@ -28,7 +28,7 @@ const App: React.FC = () => {
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
-      console.warn('AdSense not initialized:', e);
+      console.warn('AdSense initialization skipped or failed:', e);
     }
   }, []);
 
@@ -176,9 +176,9 @@ const App: React.FC = () => {
         </section>
 
         {/* AdSense Placement */}
-        <div className="container mx-auto px-6 py-8 flex justify-center">
+        <div className="container mx-auto px-6 py-8 flex justify-center min-h-[100px]">
             <ins className="adsbygoogle"
-                 style={{ display: 'block' }}
+                 style={{ display: 'block', minWidth: '300px', minHeight: '100px' }}
                  data-ad-client="ca-pub-2103405502519017"
                  data-ad-slot="1234567890"
                  data-ad-format="auto"
