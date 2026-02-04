@@ -126,7 +126,7 @@ const App: React.FC = () => {
               </div>
             </div>
             
-            <div className="flex flex-col gap-5 max-w-5xl mx-auto bg-white dark:bg-gray-900 p-5 md:p-8 rounded-[2.5rem] border border-green-50 dark:border-gray-800 shadow-2xl">
+            <div className="flex flex-col gap-5 max-w-5xl mx-auto bg-white dark:bg-gray-900 p-5 md:p-8 rounded-[2.5rem] border border-green-50 dark:border-gray-800 shadow-2xl shadow-green-900/5">
               <div className="flex flex-col md:flex-row items-stretch md:items-center gap-5">
                 <div className="relative flex-grow">
                   <input
@@ -136,7 +136,7 @@ const App: React.FC = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <span className="absolute inset-y-0 right-5 flex items-center text-green-600 dark:text-green-400 pointer-events-none">
+                  <span className="absolute inset-y-0 right-5 flex items-center text-green-600 dark:text-green-400 pointer-events-none text-2xl">
                     🔍
                   </span>
                 </div>
